@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Dashboard | Fitness Pro{% endblock %}
+{% block head %}<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>{% endblock %}
+{% block content %}
+<section class="page-head">
+  <div>
+    <p class="eyebrow">Personal command center</p>
+    <h1>Dashboard</h1>
+  </div>
+  <a class="btn primary" href="{{ url_for('diet.planner') }}"><i data-lucide="refresh-cw"></i> Generate Diet</a>
+</section>
+
+<section class="stats-grid">
+  <article class="stat"><span>BMI</span><strong>{{ latest_bmi.bmi_value if latest_bmi else "N/A" }}</strong><small>{{ latest_bmi.category if latest_bmi else "Calculate BMI" }}</small></article>
+  <article class="stat"><span>Calories</span><strong>{{ targets.calories }}</strong><small>Daily target</small></article>
+  <article class="stat"><span>Protein</span><strong>{{ targets.protein }}g</strong><small>Macro target</small></article>
+  <article class="stat"><span>Weight</span><strong>{{ latest_progress.weight_kg if latest_progress else current_user.profile.weight_kg or "N/A" }}</strong><small>Latest kg</small></article>
+</section>
+
+<section class="dashboard-grid">
+  <div class="panel"><h2>BMI Trend</h2><canvas id="bmiChart"></canvas></div>
+  <div class="panel"><h2>Weight Trend</h2><canvas id="weightChart"></canvas></div>
+  <div class="panel"><h2>Calories</h2><canvas id="calorieChart"></canvas></div>
+  <div class="panel insight">
+    <h2>Fitness Insight</h2>
+    <div class="progress-ring"><span id="goalCompletion">0%</span></div>
+    <p>Goal completion is estimated from your logged weight movement and selected fitness goal.</p>
+  </div>
+</section>
+{% endblock %}
+{% block scripts %}<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>{% endblock %}

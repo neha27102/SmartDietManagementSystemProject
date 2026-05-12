@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Profile | Fitness Pro{% endblock %}
+{% block content %}
+<section class="page-head"><div><p class="eyebrow">Personalization inputs</p><h1>Profile Settings</h1></div></section>
+<form class="panel profile-form" method="post">
+  <label>Name<input name="name" value="{{ current_user.name }}" required></label>
+  <label>Age<input name="age" type="number" value="{{ profile.age or '' }}"></label>
+  <label>Gender<select name="gender">{% for v,l in [("male","Male"),("female","Female"),("other","Other")] %}<option value="{{ v }}" {% if profile.gender==v %}selected{% endif %}>{{ l }}</option>{% endfor %}</select></label>
+  <label>Height (cm)<input name="height_cm" type="number" step="0.1" value="{{ profile.height_cm or '' }}"></label>
+  <label>Weight (kg)<input name="weight_kg" type="number" step="0.1" value="{{ profile.weight_kg or '' }}"></label>
+  <label>Activity Level<select name="activity_level">{% for v,l in [("sedentary","Sedentary"),("lightly_active","Lightly active"),("moderately_active","Moderately active"),("very_active","Very active")] %}<option value="{{ v }}" {% if profile.activity_level==v %}selected{% endif %}>{{ l }}</option>{% endfor %}</select></label>
+  <label>Fitness Goal<select name="fitness_goal">{% for v,l in [("weight_loss","Weight loss"),("muscle_gain","Muscle gain"),("maintenance","Maintenance")] %}<option value="{{ v }}" {% if profile.fitness_goal==v %}selected{% endif %}>{{ l }}</option>{% endfor %}</select></label>
+  <label>Dietary Preference<select name="dietary_preference">{% for v,l in [("vegetarian","Vegetarian"),("non_vegetarian","Non-vegetarian"),("vegan","Vegan"),("keto","Keto"),("halal","Halal"),("high_protein","High-protein"),("low_carb","Low-carb")] %}<option value="{{ v }}" {% if profile.dietary_preference==v %}selected{% endif %}>{{ l }}</option>{% endfor %}</select></label>
+  <label>Excluded Ingredients<input name="excluded_ingredients" value="{{ profile.excluded_ingredients or '' }}"></label>
+  <label>Preferred Cuisine<input name="preferred_cuisine" value="{{ profile.preferred_cuisine or 'Any' }}"></label>
+  <label>Custom Calorie Target<input name="custom_calorie_target" type="number" value="{{ profile.custom_calorie_target or '' }}"></label>
+  <button class="btn primary" type="submit"><i data-lucide="save"></i> Save Profile</button>
+</form>
+{% endblock %}

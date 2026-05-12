@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Fitness Pro | Intelligent Fitness Assistant{% endblock %}
+{% block content %}
+<section class="hero">
+  <div class="hero-copy">
+    <p class="eyebrow">AI-powered fitness and nutrition platform</p>
+    <h1>Fitness Pro</h1>
+    <p>Calculate BMI, track your transformation, and generate data-driven diet plans from a nutrition dataset with calorie and macro scoring.</p>
+    <div class="actions">
+      {% if current_user.is_authenticated %}
+      <a class="btn primary" href="{{ url_for('dashboard.dashboard') }}"><i data-lucide="layout-dashboard"></i> Open Dashboard</a>
+      {% else %}
+      <a class="btn primary" href="{{ url_for('auth.signup') }}"><i data-lucide="sparkles"></i> Start Free</a>
+      <a class="btn ghost" href="{{ url_for('auth.login') }}"><i data-lucide="log-in"></i> Login</a>
+      {% endif %}
+    </div>
+  </div>
+  <div class="hero-visual">
+    <div class="metric-card"><strong>2,280</strong><span>Smart calorie target</span></div>
+    <div class="meal-preview">
+      <span></span><span></span><span></span>
+      <p>Breakfast • Lunch • Dinner • Snack</p>
+    </div>
+  </div>
+</section>
+
+<section class="feature-grid">
+  <article><i data-lucide="calculator"></i><h3>BMI Intelligence</h3><p>Reusable formulas classify BMI and save history for analytics.</p></article>
+  <article><i data-lucide="database"></i><h3>Nutrition Dataset</h3><p>Foods are filtered and scored by tags, macros, calories, cuisine, and exclusions.</p></article>
+  <article><i data-lucide="bar-chart-3"></i><h3>Progress Dashboard</h3><p>Charts, cards, goal completion, and calorie trends update dynamically.</p></article>
+</section>
+{% endblock %}

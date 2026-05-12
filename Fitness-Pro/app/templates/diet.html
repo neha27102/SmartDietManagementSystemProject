@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% block title %}Diet Planner | Fitness Pro{% endblock %}
+{% block content %}
+<section class="page-head">
+  <div><p class="eyebrow">Dataset-powered recommendation engine</p><h1>Diet Planner</h1></div>
+  <button class="btn ghost" id="regeneratePlan"><i data-lucide="shuffle"></i> Regenerate</button>
+</section>
+
+<section class="two-col wide-left">
+  <div>
+    <div class="diet-visual-panel">
+      <article>
+        <i data-lucide="leaf"></i>
+        <div>
+          <span>Vegetarian Mode</span>
+          <p>Filters meals to plant-forward and dairy-friendly options while blocking meat and fish.</p>
+        </div>
+      </article>
+      <article>
+        <i data-lucide="drumstick"></i>
+        <div>
+          <span>Non-veg Mode</span>
+          <p>Allows chicken, fish, eggs, and lean meat options for higher protein flexibility.</p>
+        </div>
+      </article>
+    </div>
+
+    <div class="meal-grid" id="mealGrid">
+      {% if plan %}
+      {% for meal in plan.meals %}
+      <article class="meal-card" data-meal-id="{{ meal.id }}">
+        <div class="meal-top">
+          <div class="meal-icon"><i data-lucide="{% if meal.meal_type == 'breakfast' %}sunrise{% elif meal.meal_type == 'lunch' %}sun{% elif meal.meal_type == 'dinner' %}moon{% else %}apple{% endif %}"></i></div>
+          <div><span>{{ meal.meal_type|title }}</span><h3>{{ meal.food_item.name }}</h3></div>
+        </div>
+        <p>{{ meal.food_item.cuisine }} &middot; {{ meal.food_item.ingredients }}</p>
+        <div class="macro-row"><b>{{ meal.calories }} kcal</b><b>{{ meal.protein }}g P</b><b>{{ meal.carbs }}g C</b><b>{{ meal.fats }}g F</b></div>
+        <div class="macro-bars">
+          <div><span>Protein</span><em style="--value: {{ [meal.protein * 2, 100]|min }}%"></em></div>
+          <div><span>Carbs</span><em style="--value: {{ [meal.carbs, 100]|min }}%"></em></div>
+          <div><span>Fats</span><em style="--value: {{ [meal.fats * 3, 100]|min }}%"></em></div>
+        </div>
+        <div class="card-actions">
+          <button class="icon-btn replace-meal" aria-label="Replace meal"><i data-lucide="refresh-cw"></i></button>
+          <form method="post" action="{{ url_for('diet.favorite', food_id=meal.food_item_id) }}"><button class="icon-btn" aria-label="Favorite"><i data-lucide="heart"></i></button></form>
+        </div>
+      </article>
+      {% endfor %}
+      {% else %}
+      <div class="panel empty-state"><h2>No plan yet</h2><p>Set preferences and generate your first intelligent plan.</p></div>
+      {% endif %}
+    </div>
+  </div>
+
+  <form class="panel form-card" method="post" action="{{ url_for('diet.generate') }}">
+    <h2>Customize Plan</h2>
+    <div class="preference-cards" role="radiogroup" aria-label="Diet preference">
+      <label class="preference-card">
+        <input type="radio" name="dietary_preference" value="vegetarian" {% if current_user.profile.dietary_preference == "vegetarian" %}checked{% endif %}>
+        <span><i data-lucide="leaf"></i><b>Veg Diet</b><small>Paneer, lentils, tofu, grains</small></span>
+      </label>
+      <label class="preference-card">
+        <input type="radio" name="dietary_preference" value="non_vegetarian" {% if current_user.profile.dietary_preference == "non_vegetarian" %}checked{% endif %}>
+        <span><i data-lucide="drumstick"></i><b>Non-veg Diet</b><small>Chicken, fish, eggs, lean meat</small></span>
+      </label>
+    </div>
+    <label>Calorie Target<input name="custom_calorie_target" type="number" placeholder="{{ targets.calories }}" value="{{ current_user.profile.custom_calorie_target or '' }}"></label>
+    <label>Excluded Ingredients<input name="excluded_ingredients" placeholder="peanut, soy" value="{{ current_user.profile.excluded_ingredients or '' }}"></label>
+    <label>Cuisine
+      <select name="preferred_cuisine">
+        {% for cuisine in ["Any", "Indian", "Mediterranean", "Asian", "Global", "Mexican"] %}
+        <option value="{{ cuisine }}" {% if current_user.profile.preferred_cuisine == cuisine %}selected{% endif %}>{{ cuisine }}</option>
+        {% endfor %}
+      </select>
+    </label>
+    <button class="btn primary" type="submit"><i data-lucide="sparkles"></i> Generate Plan</button>
+    {% if plan %}
+    <div class="target-box">
+      <span>{{ plan.target_calories }} kcal</span><span>{{ plan.target_protein }}g protein</span><span>{{ plan.target_carbs }}g carbs</span><span>{{ plan.target_fats }}g fats</span>
+    </div>
+    {% endif %}
+  </form>
+</section>
+{% endblock %}
+{% block scripts %}<script src="{{ url_for('static', filename='js/diet.js') }}"></script>{% endblock %}

@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Signup | Fitness Pro{% endblock %}
+{% block content %}
+<section class="form-page">
+  <form class="panel form-card" method="post">
+    <h1>Create account</h1>
+    <label>Name<input name="name" required></label>
+    <label>Email<input name="email" type="email" required></label>
+    <label>Password<input name="password" type="password" minlength="6" required></label>
+    <button class="btn primary" type="submit"><i data-lucide="user-plus"></i> Signup</button>
+    <p>Already registered? <a href="{{ url_for('auth.login') }}">Login</a></p>
+  </form>
+</section>
+{% endblock %}

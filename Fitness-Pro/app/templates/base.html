@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Fitness Pro{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  {% block head %}{% endblock %}
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <a class="brand" href="{{ url_for('main.home') }}"><span>F</span> Fitness Pro</a>
+      <nav>
+        <a href="{{ url_for('main.home') }}"><i data-lucide="home"></i> Home</a>
+        {% if current_user.is_authenticated %}
+        <a href="{{ url_for('dashboard.dashboard') }}"><i data-lucide="layout-dashboard"></i> Dashboard</a>
+        <a href="{{ url_for('bmi.calculator') }}"><i data-lucide="activity"></i> BMI</a>
+        <a href="{{ url_for('diet.planner') }}"><i data-lucide="utensils"></i> Diet Planner</a>
+        <a href="{{ url_for('progress.tracker') }}"><i data-lucide="line-chart"></i> Progress</a>
+        <a href="{{ url_for('profile.settings') }}"><i data-lucide="settings"></i> Profile</a>
+        <a href="{{ url_for('auth.logout') }}"><i data-lucide="log-out"></i> Logout</a>
+        {% else %}
+        <a href="{{ url_for('auth.login') }}"><i data-lucide="log-in"></i> Login</a>
+        <a href="{{ url_for('auth.signup') }}"><i data-lucide="user-plus"></i> Signup</a>
+        {% endif %}
+      </nav>
+    </aside>
+
+    <main class="content">
+      <header class="topbar">
+        <button class="icon-btn" id="themeToggle" aria-label="Toggle theme"><i data-lucide="sun-moon"></i></button>
+        {% if current_user.is_authenticated %}
+        <span class="user-pill"><i data-lucide="user"></i> {{ current_user.name }}</span>
+        {% endif %}
+      </header>
+
+      {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+      <div class="flash-stack">
+        {% for category, message in messages %}
+        <div class="flash {{ category }}">{{ message }}</div>
+        {% endfor %}
+      </div>
+      {% endif %}
+      {% endwith %}
+
+      {% block content %}{% endblock %}
+    </main>
+  </div>
+  <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>
